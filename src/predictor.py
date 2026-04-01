@@ -30,7 +30,7 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+
 @dataclass
 class PredictionResult:
     """Structured output from a single market prediction call."""
@@ -86,7 +86,6 @@ class PredictionResult:
         return "\n".join(lines)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class MarketPredictor:
     """
     End-to-end GenAI prediction pipeline for Nifty50 and Bank Nifty.
@@ -128,7 +127,7 @@ Always respond in valid JSON format as specified.
         except ImportError:
             logger.warning("openai package not installed.")
 
-    # ── Main Prediction Method ────────────────────────────────────────────────
+    #  Main Prediction Method 
     def predict(
         self,
         index_name: str,
@@ -177,7 +176,7 @@ Always respond in valid JSON format as specified.
             logger.error(f"OpenAI prediction failed: {e}")
             return self._demo_prediction(index_name, indicator_summary, current_price)
 
-    # ── Prompt Builder ────────────────────────────────────────────────────────
+    #  Prompt Builder 
     def _build_prompt(
         self,
         index_name: str,
@@ -281,7 +280,7 @@ Based on ALL the above data, provide your prediction in this EXACT JSON format:
 Be specific about price levels. Use the actual current price of ₹{price:,.2f} as base.
 """
 
-    # ── Response Parser ───────────────────────────────────────────────────────
+    #  Response Parser 
     def _parse_response(
         self, raw: str, index_name: str, ind: dict
     ) -> PredictionResult:
@@ -334,7 +333,7 @@ Be specific about price levels. Use the actual current price of ₹{price:,.2f} 
                 raw_analysis=raw,
             )
 
-    # ── Demo Mode (no API key) ────────────────────────────────────────────────
+    # Demo Mode (no API key) 
     def _demo_prediction(
         self, index_name: str, ind: dict, price: float
     ) -> PredictionResult:
