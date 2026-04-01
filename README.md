@@ -49,7 +49,7 @@ git clone https://github.com/Adityam-7/nifty-predictor.git
 cd nifty-predictor
 
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate        
 
 pip install -r requirements.txt
 ```
