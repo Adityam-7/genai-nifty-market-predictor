@@ -28,9 +28,8 @@ from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+
 #  News Sources (RSS Feeds — no API key required)
-# ─────────────────────────────────────────────────────────────────────────────
 FINANCIAL_RSS_FEEDS = {
     "ET Markets":         "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms",
     "MoneyControl":       "https://www.moneycontrol.com/rss/latestnews.xml",
@@ -51,7 +50,7 @@ QUERY_TOPICS = [
 ]
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+
 class FinancialNewsRAG:
     """
     RAG pipeline that retrieves and synthesises financial news
@@ -69,7 +68,7 @@ class FinancialNewsRAG:
 
         self._init_langchain()
 
-    # ── Initialise LangChain Components ───────────────────────────────────────
+    #Initialise LangChain Components 
     def _init_langchain(self) -> None:
         """Lazy-import and initialise LangChain components."""
         try:
@@ -93,7 +92,7 @@ class FinancialNewsRAG:
             logger.warning(f"LangChain not available: {e}. Using fallback mode.")
             self._lc_ready = False
 
-    # ── Public: Retrieve Context ──────────────────────────────────────────────
+    #  Public: Retrieve Context 
     def get_market_context(
         self,
         index_name: str = "Nifty50",
@@ -123,7 +122,7 @@ class FinancialNewsRAG:
 
         return self._keyword_filter_context(articles, index_name)
 
-    # ── Article Ingestion ─────────────────────────────────────────────────────
+    #  Article Ingestion 
     def _get_articles(self, refresh: bool = False) -> list[dict]:
         """Fetch articles from RSS feeds with 30-minute cache."""
         now = datetime.now()
@@ -171,7 +170,7 @@ class FinancialNewsRAG:
         title = entry.get("title", "")
         return f"{title}. {raw}".strip()
 
-    # ── RAG Retrieval via LangChain + FAISS ───────────────────────────────────
+    #  RAG Retrieval via LangChain + FAISS 
     def _rag_retrieve(self, articles: list[dict], index_name: str) -> str:
         """Build FAISS vector store and retrieve top-k relevant chunks."""
         splitter = self._TextSplitter(chunk_size=600, chunk_overlap=80)
@@ -244,7 +243,7 @@ Be factual, concise, and data-focused.
         response = llm([HumanMessage(content=synthesis_prompt)])
         return response.content
 
-    # ── Fallback: Keyword Filter ──────────────────────────────────────────────
+    #  Fallback: Keyword Filter 
     def _keyword_filter_context(self, articles: list[dict], index_name: str) -> str:
         """
         When LangChain is unavailable or API key is missing,
@@ -286,7 +285,7 @@ Be factual, concise, and data-focused.
             f"global cues (US Fed, crude oil, USD/INR) for directional bias."
         )
 
-    # ── News Headlines (for UI display) ───────────────────────────────────────
+    #  News Headlines (for UI display) 
     def get_headlines(self, n: int = 10) -> list[dict]:
         """Return latest n headlines from cached articles."""
         articles = self._get_articles()
