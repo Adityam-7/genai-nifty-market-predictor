@@ -24,7 +24,7 @@ import yfinance as yf
 
 logger = logging.getLogger(__name__)
 
-# ── Index tickers on NSE ──────────────────────────────────────────────────────
+# Index tickers on NSE 
 TICKERS = {
     "Nifty50":    "^NSEI",
     "BankNifty":  "^NSEBANK",
@@ -37,14 +37,12 @@ CACHE_DIR = Path("./data/cache")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class MarketDataCollector:
     """Collects, cleans, and structures market data for downstream pipelines."""
 
     def __init__(self, cache_ttl_minutes: int = 15):
         self.cache_ttl = timedelta(minutes=cache_ttl_minutes)
 
-    # ── Core Fetch ────────────────────────────────────────────────────────────
     def fetch(
         self,
         ticker: str,
@@ -143,7 +141,7 @@ class MarketDataCollector:
             logger.error(f"Real-time quote failed for {ticker}: {e}")
             return {}
 
-    # ── Cleaning ──────────────────────────────────────────────────────────────
+    # Cleaning 
     def _clean(self, df: pd.DataFrame, ticker: str) -> pd.DataFrame:
         """
         Standardise and clean raw yfinance DataFrame.
@@ -186,7 +184,7 @@ class MarketDataCollector:
 
         return df.dropna(subset=["log_return"])
 
-    # ── Cache Helpers ─────────────────────────────────────────────────────────
+    #  Cache Helpers
     def _cache_key(self, *args) -> str:
         raw = "_".join(str(a) for a in args if a)
         return hashlib.md5(raw.encode()).hexdigest()
@@ -214,9 +212,7 @@ class MarketDataCollector:
             logger.warning(f"Cache write failed: {e}")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  Quick CLI test
-# ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 
