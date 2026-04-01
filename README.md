@@ -1,6 +1,8 @@
 # 📊 GenAI-Driven Nifty50 & Bank Nifty Market Predictor
 
-> A production-grade stock market prediction system that forecasts Nifty50 and Bank Nifty movements using **Yahoo Finance API**, **LangChain RAG**, and **OpenAI GPT-4o** — built with a clean Python data pipeline and an interactive Streamlit dashboard.
+> A stock market prediction system that forecasts Nifty50 and Bank Nifty 
+> movements using Yahoo Finance, LangChain RAG, and OpenAI GPT-4o.
+> Built as a personal project to combine technical analysis with GenAI.
 
 ---
 
@@ -43,7 +45,7 @@
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourname/nifty-predictor.git
+git clone https://github.com/Adityam-7/nifty-predictor.git
 cd nifty-predictor
 
 python -m venv venv
@@ -170,11 +172,11 @@ headlines = rag.get_headlines(10)
 ```
 
 **RAG Architecture:**
-1. **Ingestion:** 5 financial RSS feeds (ET Markets, MoneyControl, LiveMint, BS, CNBC TV18)
-2. **Chunking:** `RecursiveCharacterTextSplitter(chunk_size=600, overlap=80)`
-3. **Embedding:** `text-embedding-3-small` (OpenAI)
-4. **Vector Store:** FAISS with MMR retrieval (k=6, fetch_k=20)
-5. **Synthesis:** GPT-4o-mini generates 3-paragraph structured context
+**How the RAG pipeline works:**
+- Pulls latest financial news from 5 RSS feeds (no API key needed)
+- Chunks and embeds using OpenAI's text-embedding-3-small
+- FAISS vector store with MMR retrieval to avoid redundant results
+- GPT-4o-mini synthesises retrieved chunks into a market context summary
 
 ---
 
