@@ -193,11 +193,11 @@ result = predictor.predict(
     current_price=24823.0,
 )
 
-print(result.direction)    # "BULLISH"
-print(result.confidence)   # 0.73
-print(result.price_5d)     # 25200.0
-print(result.trade_setup)  # {'entry': 24823, 'target': 25200, 'stop_loss': 24500}
-print(result.key_reasons)  # ['RSI at 58 showing momentum', ...]
+print(result.direction)    
+print(result.confidence)   
+print(result.price_5d)     
+print(result.trade_setup)  
+print(result.key_reasons)  
 ```
 
 **Prompt Engineering:**
