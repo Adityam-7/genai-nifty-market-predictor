@@ -21,7 +21,6 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class TechnicalIndicators:
     """
     Stateless indicator engine.
@@ -32,7 +31,7 @@ class TechnicalIndicators:
         summary = ti.get_signal_summary(enriched_df)
     """
 
-    # ── Public API ────────────────────────────────────────────────────────────
+    # Public API 
     def compute_all(self, df: pd.DataFrame) -> pd.DataFrame:
         """Apply every indicator group and return enriched DataFrame."""
         df = df.copy()
@@ -104,7 +103,7 @@ class TechnicalIndicators:
             "signal":         last.get("signal", "NEUTRAL"),
         }
 
-    # ── Trend Indicators ──────────────────────────────────────────────────────
+    #Trend Indicators
     def _trend(self, df: pd.DataFrame) -> pd.DataFrame:
         c = df["close"]
         h, l = df["high"], df["low"]
@@ -133,7 +132,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Momentum Indicators ───────────────────────────────────────────────────
+    #Momentum Indicators
     def _momentum(self, df: pd.DataFrame) -> pd.DataFrame:
         c, h, l = df["close"], df["high"], df["low"]
 
@@ -159,7 +158,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Volatility Indicators ─────────────────────────────────────────────────
+    #Volatility Indicators
     def _volatility(self, df: pd.DataFrame) -> pd.DataFrame:
         c, h, l = df["close"], df["high"], df["low"]
 
@@ -185,7 +184,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Volume Indicators ─────────────────────────────────────────────────────
+    #Volume Indicators
     def _volume(self, df: pd.DataFrame) -> pd.DataFrame:
         c, h, l, v = df["close"], df["high"], df["low"], df["volume"]
 
@@ -222,7 +221,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Pivot Points ──────────────────────────────────────────────────────────
+    # Pivot Points 
     def _pivots(self, df: pd.DataFrame) -> pd.DataFrame:
         """Classic daily pivot points using previous bar's HLC."""
         ph = df["high"].shift(1)
@@ -239,7 +238,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Composite Signal ──────────────────────────────────────────────────────
+    # Composite Signal
     def _composite_signal(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Weighted aggregation of indicator signals into a single score.
@@ -295,7 +294,7 @@ class TechnicalIndicators:
         )
         return df
 
-    # ── Helper: RSI ───────────────────────────────────────────────────────────
+    #Helper: RSI
     @staticmethod
     def _rsi(series: pd.Series, period: int = 14) -> pd.Series:
         delta = series.diff()
@@ -304,14 +303,14 @@ class TechnicalIndicators:
         rs = gain / (loss + 1e-9)
         return 100 - 100 / (1 + rs)
 
-    # ── Helper: ATR ───────────────────────────────────────────────────────────
+    #Helper: ATR
     @staticmethod
     def _atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
         h, l, c = df["high"], df["low"], df["close"].shift(1)
         tr = pd.concat([h - l, (h - c).abs(), (l - c).abs()], axis=1).max(axis=1)
         return tr.ewm(span=period, adjust=False).mean()
 
-    # ── Helper: ADX ───────────────────────────────────────────────────────────
+    #Helper: ADX
     def _adx(self, df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
         h, l, c = df["high"], df["low"], df["close"]
         atr = self._atr(df, period)
@@ -332,7 +331,7 @@ class TechnicalIndicators:
 
         return df
 
-    # ── Helper: Supertrend ────────────────────────────────────────────────────
+    # Helper: Supertrend
     def _supertrend(
         self, df: pd.DataFrame, period: int = 10, multiplier: float = 3.0
     ) -> pd.DataFrame:
